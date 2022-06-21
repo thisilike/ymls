@@ -1,0 +1,277 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$ref": "#/definitions/Welcome1",
+    "definitions": {
+        "Welcome1": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "scrapers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Scraper"
+                    }
+                }
+            },
+            "required": [
+                "scrapers"
+            ],
+            "title": "Welcome1"
+        },
+        "Scraper": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "urls": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uri",
+                        "qt-uri-protocols": [
+                            "https"
+                        ]
+                    }
+                },
+                "downloadClient": {
+                    "$ref": "#/definitions/DownloadClient"
+                },
+                "retrys": {
+                    "type": "integer"
+                },
+                "onFailure": {
+                    "type": "string",
+                    "enum": ["abort", "ignore"]
+                },
+                "delay": {
+                    "type": "integer"
+                },
+                "workers": {
+                    "type": "integer"
+                },
+                "dataCollectors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DataCollector"
+                    }
+                },
+                "storageInterfaces": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/StorageInterface"
+                    }
+                },
+                "getter": {
+                    "$ref": "#/definitions/Getter"
+                }
+            },
+            "required": [
+                "dataCollectors",
+                "delay",
+                "name",
+                "onFailure",
+                "retrys",
+                "storageInterfaces",
+                "urls",
+                "workers"
+            ],
+            "title": "Scraper"
+        },
+        "DataCollector": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "selectors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Selector"
+                    }
+                },
+                "extractor": {
+                    "$ref": "#/definitions/Extractor"
+                },
+                "transformers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "extractor",
+                "name"
+            ],
+            "title": "DataCollector"
+        },
+        "Extractor": {
+            "type": "object",
+            "oneOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "const": "text"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ]
+                }
+            ],
+            "required": [
+                "type"
+            ],
+            "title": "Extractor"
+        },
+        "Selector": {
+            "type": "object",
+            "oneOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "const": "css-select"
+                        },
+                        "cssSelectString": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "cssSelectString"
+                    ]
+                }
+            ],
+            "required": [
+                "type"
+            ],
+            "title": "Select"
+        },
+        "DownloadClient": {
+            "type": "object",
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "const": "go-http"
+                        }
+                    }
+                }
+            ],
+            "required": [
+                "type"
+            ],
+            "title": "DownloadClient"
+        },
+        "Getter": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "variables": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "type",
+                "variables"
+            ],
+            "title": "Getter"
+        },
+        "Constants": {
+
+        },
+        "StorageInterface": {
+            "type": "object",
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "interface": {
+                            "const": "json"
+                        },
+                        "fileName": {
+                            "type": "string"
+                        },
+                        "filePath": {
+                            "type": "string"
+                        },
+                        "template": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "fieldName": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "enum": [
+                                            "string",
+                                            "integer",
+                                            "bool"
+                                        ]
+                                    },
+                                    "varName": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "fieldName",
+                                    "type",
+                                    "varName"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "fileName",
+                        "template",
+                        "interface"
+                    ]
+                }
+            ],
+            "properties": {
+                "type": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "interface"
+            ],
+            "title": "StorageInterface"
+        },
+        "Template": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "valueID": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "type",
+                "valueID"
+            ],
+            "title": "Template"
+        }
+    }
+}

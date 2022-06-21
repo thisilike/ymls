@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=./ymls.json
+
+scrapers:
+- name: example-scraper
+  urls: 
+  - https://example.com
+  downloadClient: 
+    type: go-http
+  retrys: 3
+  onFailure: abort
+  delay: 100
+  workers: 1
+  dataCollectors:
+  - name: headline
+    selectors:
+    - type: css-select
+      cssSelectString: h1
+    extractor:
+      type: text
+    transformers:
+    - trim-space
+  - name: text
+    selectors:
+    - type: css-select
+      cssSelectString: div>p
+    extractor:
+      type: text
+    transformers:
+    - trim-space
+  storageInterfaces:
+  - interface: json
+    fileName: test.json
+    template:
+      - fieldName: date
+        type: string
+        varName: aasf
+      - fieldName: headline
+        type: string
+        varName: headline
